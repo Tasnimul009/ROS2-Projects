@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+
+<root main_tree_to_execute="MainTree">
+
+    <BehaviorTree ID="MainTree">
+
+        <Sequence name="root_sequence">
+
+            <CheckBattery name="check_battery"/>
+            <SayHello     name="say_hello"/>
+
+        </Sequence>
+
+    </BehaviorTree>
+
+</root>
