@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<root main_tree_to_execute="MainTree">
+  <BehaviorTree ID="MainTree">
+
+    <Sequence name="patrol_mission">
+      <NavigateTo name="waypoint_0" x="3.5"  y="-0.5"/>
+      <NavigateTo name="waypoint_1" x="3.5"  y="1.0"/>
+      <NavigateTo name="waypoint_2" x="0.0"  y="1.0"/>
+      <NavigateTo name="waypoint_3" x="0.0"  y="0.0"/>
+    </Sequence>
+
+  </BehaviorTree>
+</root>
