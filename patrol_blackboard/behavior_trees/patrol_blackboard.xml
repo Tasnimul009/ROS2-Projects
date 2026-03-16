@@ -1,0 +1,42 @@
+<root BTCPP_format="4" main_tree_to_execute="MainTree">
+
+  <BehaviorTree ID="MainTree">
+
+    <RecoveryNode number_of_retries="3" name="NavigateWithRecovery">
+
+      <Sequence name="navigate_sequence">
+
+        <RateController hz="1.0">
+          <ComputePathToPose
+            goal="{goal}"
+            path="{path}"
+            planner_id="GridBased"
+          />
+        </RateController>
+
+        <FollowPath
+          path="{path}"
+          controller_id="FollowPath"
+        />
+
+      </Sequence>
+
+      <Sequence name="recovery_sequence">
+
+        <ClearEntireCostmap
+          name="ClearLocalCostmap"
+          service_name="local_costmap/clear_entirely_local_costmap"
+        />
+
+        <Spin spin_dist="1.57" />
+
+        <Wait wait_duration="2.0" />
+
+      </Sequence>
+
+    </RecoveryNode>
+
+  </BehaviorTree>
+
+</root>
+
