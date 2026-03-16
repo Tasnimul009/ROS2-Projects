@@ -1,0 +1,64 @@
+<root BTCPP_format="4" main_tree_to_execute="MainTree">
+
+  <BehaviorTree ID="MainTree">
+
+    <!--
+      RecoveryNode has exactly 2 children:
+        Child 1: the "work" subtree — try to navigate
+        Child 2: the "recovery" subtree — what to do if work fails
+      If child 1 fails, run child 2, then retry child 1.
+      number_of_retries controls how many times it tries recovery.
+    -->
+    <RecoveryNode number_of_retries="3" name="NavigateWithRecovery">
+
+      <!-- CHILD 1: The main navigation sequence -->
+      <Sequence name="navigate_sequence">
+
+        <!-- Recompute path if goal has changed or we've drifted -->
+        <RateController hz="1.0">
+          <ComputePathToPose
+            goal="{goal}"
+            path="{path}"
+            planner_id="GridBased"
+          />
+        </RateController>
+
+        <!-- Drive along the path -->
+        <FollowPath
+          path="{path}"
+          controller_id="FollowPath"
+        />
+
+      </Sequence>
+
+      <!-- CHILD 2: Recovery sequence — runs when navigation fails -->
+      <Sequence name="recovery_sequence">
+
+        <!--
+          ClearEntireCostmap: wipes the local costmap.
+          Useful when sensor noise created phantom obstacles.
+        -->
+        <ClearEntireCostmap
+          name="ClearLocalCostmap"
+          service_name="local_costmap/clear_entirely_local_costmap"
+        />
+
+        <!--
+          Spin: rotate 1.57 rad (90°) in place.
+          Helps the robot get unstuck and re-scan surroundings.
+        -->
+        <Spin spin_dist="1.57" />
+
+        <!--
+          Wait: pause 2 seconds.
+          Gives time for sensors to update after spinning.
+        -->
+        <Wait wait_duration="2.0" />
+
+      </Sequence>
+
+    </RecoveryNode>
+
+  </BehaviorTree>
+
+</root>
